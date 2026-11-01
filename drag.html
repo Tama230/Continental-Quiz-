@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Continental Quiz</title>
+    <style>
+        body {
+            background-color: #FDFBF7;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 15px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 2px;
+            font-size: 1.8rem;
+        }
+
+        p.instruction {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            display: flex;
+            max-width: 950px;
+            margin: 0 auto;
+            gap: 15px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .source-box, .drop-zones {
+            background: #fff;
+            border: 2px solid #e0dcd0;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+        }
+
+        .source-box {
+            width: 260px;
+            background-color: #FAF6ED;
+        }
+
+        .drop-zones {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Disusun jadi 2 kolom agar rapat dan tidak panjang ke bawah */
+            gap: 10px;
+            background-color: #FAF6ED;
+        }
+
+        h3 {
+            margin: 0 0 8px 0;
+            color: #444;
+            border-bottom: 2px solid #e0dcd0;
+            padding-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .dropzone {
+            background-color: #FFF;
+            border: 2px dashed #b5a895;
+            border-radius: 6px;
+            min-height: 105px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            transition: background-color 0.2s;
+        }
+
+        /* Kotak benua terakhir (South America) dibuat melebar penuh di bawah */
+        .dropzone-container:nth-child(5) {
+            grid-column: span 2;
+        }
+
+        .dropzone.drag-over {
+            background-color: #FFF9C4;
+            border-color: #fbc02d;
+        }
+
+        .draggable-item {
+            background-color: #EFE6D5;
+            border: 1px solid #b5a895;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: grab;
+            font-weight: 600;
+            font-size: 0.9rem;
+            user-select: none;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.4;
+        }
+
+        .correct {
+            background-color: #C8E6C9 !important;
+            border-color: #4CAF50 !important;
+            color: #1B5E20 !important;
+        }
+
+        .incorrect {
+            background-color: #FFCDD2 !important;
+            border-color: #F44336 !important;
+            color: #B71C1C !important;
+        }
+
+        #score-board {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Continental Quiz 🗺️</h1>
+    <p class="instruction">Drag and drop each country into its appropriate Continent box. (Max 5 items per box)</p>
+
+    <div class="container">
+        <!-- Kolom Asal Negara -->
+        <div class="source-box">
+            <h3>Countries</h3>
+            <div id="item-source" class="dropzone" style="min-height: 480px;" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="dropToSource(event)">
+                <!-- Asia -->
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c1" data-continent="asia">Japan</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c2" data-continent="asia">Indonesia</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c3" data-continent="asia">China</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c4" data-continent="asia">India</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c5" data-continent="asia">Thailand</div>
+                
+                <!-- Europe -->
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c6" data-continent="europe">France</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c7" data-continent="europe">Germany</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c8" data-continent="europe">Italy</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c9" data-continent="europe">Spain</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c10" data-continent="europe">United Kingdom</div>
+                
+                <!-- Africa -->
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c11" data-continent="africa">Egypt</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c12" data-continent="africa">South Africa</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c13" data-continent="africa">Nigeria</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c14" data-continent="africa">Kenya</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c15" data-continent="africa">Morocco</div>
+                
+                <!-- North America -->
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c16" data-continent="north-america">United States</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c17" data-continent="north-america">Canada</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c18" data-continent="north-america">Mexico</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c19" data-continent="north-america">Cuba</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c20" data-continent="north-america">Guatemala</div>
+                
+                <!-- South America -->
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c21" data-continent="south-america">Brazil</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c22" data-continent="south-america">Argentina</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c23" data-continent="south-america">Colombia</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c24" data-continent="south-america">Peru</div>
+                <div class="draggable-item" draggable="true" ondragstart="drag(event)" id="c25" data-continent="south-america">Chile</div>
+            </div>
+        </div>
+
+        <!-- Kolom Kotak Benua (Disusun Rapat Grid 2 Kolom) -->
+        <div class="drop-zones">
+            <div class="dropzone-container">
+                <h3>Asia</h3>
+                <div class="dropzone" id="asia" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'asia')"></div>
+            </div>
+            <div class="dropzone-container">
+                <h3>Europe</h3>
+                <div class="dropzone" id="europe" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'europe')"></div>
+            </div>
+            <div class="dropzone-container">
+                <h3>Africa</h3>
+                <div class="dropzone" id="africa" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'africa')"></div>
+            </div>
+            <div class="dropzone-container">
+                <h3>North America</h3>
+                <div class="dropzone" id="north-america" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'north-america')"></div>
+            </div>
+            <div class="dropzone-container">
+                <h3>South America</h3>
+                <div class="dropzone" id="south-america" ondragover="allowDrop(event)" ondragleave="removeDropStyle(event)" ondrop="drop(event, 'south-america')"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="score-board"></div>
+
+    <script>
+        function shuffleCountries() {
+            const source = document.getElementById('item-source');
+            for (let i = source.children.length; i >= 0; i--) {
+                source.appendChild(source.children[Math.random() * i | 0]);
+            }
+        }
+        window.onload = shuffleCountries;
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.add('drag-over');
+        }
+
+        function removeDropStyle(ev) {
+            ev.currentTarget.classList.remove('drag-over');
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+            ev.target.classList.add('dragging');
+        }
+
+        function drop(ev, targetContinent) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            
+            const dropzone = ev.currentTarget;
+            if (dropzone.children.length >= 5) {
+                alert("Maximum 5 items allowed per continent box!");
+                return;
+            }
+
+            const data = ev.dataTransfer.getData("text");
+            const element = document.getElementById(data);
+            element.classList.remove('dragging');
+
+            dropzone.appendChild(element);
+
+            const itemContinent = element.getAttribute('data-continent');
+            if (itemContinent === targetContinent) {
+                element.classList.remove('incorrect');
+                element.classList.add('correct');
+            } else {
+                element.classList.remove('correct');
+                element.classList.add('incorrect');
+            }
+
+            checkCompletion();
+        }
+
+        function dropToSource(ev) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const data = ev.dataTransfer.getData("text");
+            const element = document.getElementById(data);
+            element.classList.remove('dragging');
+            element.classList.remove('correct', 'incorrect');
+            ev.currentTarget.appendChild(element);
+            checkCompletion();
+        }
+
+        function checkCompletion() {
+            const items = document.querySelectorAll('.draggable-item');
+            let correctCount = 0;
+            items.forEach(item => {
+                if (item.classList.contains('correct')) {
+                    correctCount++;
+                }
+            });
+
+            const scoreBoard = document.getElementById('score-board');
+            if (correctCount === 25) {
+                scoreBoard.innerText = "🎉 Congratulations! All 25 countries are correctly placed!";
+            } else {
+                scoreBoard.innerText = `Correctly placed: ${correctCount} / 25`;
+            }
+        }
+    </script>
+</body>
+</html>
